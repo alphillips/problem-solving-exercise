@@ -1,0 +1,10 @@
+!.keep
+*.DS_Store
+/node_modules/*
+npm-debug.log*
+yarn-error.log*
+build/*
+!build/manifest.yml
+!build/Staticfile.auth
+src/**/*.css
+/.next/*
