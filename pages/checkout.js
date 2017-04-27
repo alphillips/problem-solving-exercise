@@ -1,7 +1,7 @@
 import React from 'react'
 import Head from 'next/head'
 import Link from 'next/link'
-import {addItem, getItems} from './../services/store'
+import {addItem, getItems, hasItems} from './../services/store'
 // import 'isomorphic-fetch'
 
 export default class extends React.Component {
@@ -13,8 +13,16 @@ export default class extends React.Component {
     // const json = await res.json()
     // return { prices: json.prices }
     let props = {}
-    props.selectedItems = getItems();
-    props.current = query
+    let selectedItems = getItems();
+    // console.log(props.selectedItems);
+    let items = [];
+    for(let i in selectedItems){
+      // let obj = {name:i,price:selectedItems[i]}
+      items.push({name:i,quantity:selectedItems[i].quantity, price:selectedItems[i].price});
+    }
+    // console.log(items);
+    props.items = items;
+    // props.current = query
     return props
   }
 
@@ -29,7 +37,7 @@ export default class extends React.Component {
 
   addToCart(){
     console.log(this.state.quantity)
-    addItem(this.props.current.name, this.state.quantity, this.props.current.price);
+    addItem(this.props.current.name, this.state.quantity);
   }
 
   handleChange(event) {
@@ -44,17 +52,19 @@ export default class extends React.Component {
           <meta name="viewport" content="initial-scale=1.0, width=device-width" />
         </Head>
 
-        <h1>{this.props.current.name}</h1>
-        <strong>${this.props.current.price}</strong>
-        <label htmlFor="quantity">Amount</label>
-        <input id="quantity" type="number" value={this.state.quantity} onChange={this.handleChange}/>
-        <button onClick={e => {
-          this.addToCart()
-        }}>Add to cart</button>
+        <h1></h1>
+        {hasItems() &&
+          <div>
+            <ul>
+            {this.props.items.map((item) =>
+              <li key={item.name}>{item.name} {item.price} {item.quantity}</li>
+            )}
+            </ul>
+          </div>
+        }
         <br />
-        <Link href={{ pathname: '/'}}><a>Continue shopping</a></Link>
-        <br />
-        <Link href={{ pathname: 'checkout'}}><a>View cart</a></Link>
+        <Link href={{ pathname: '/',}}><a>Back to shopping</a></Link>
+
       </div>
     )
   }

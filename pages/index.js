@@ -1,6 +1,7 @@
 import React from 'react'
 import Head from 'next/head'
 import Link from 'next/link'
+import {addItem, getItems, hasItems} from './../services/store'
 import 'isomorphic-fetch'
 
 export default class extends React.Component {
@@ -8,7 +9,12 @@ export default class extends React.Component {
   static async getInitialProps ({ req }) {
     const res = await fetch('https://api.myjson.com/bins/gx6vz')
     const json = await res.json()
-    return { prices: json.prices }
+    let props = {}
+    props.selectedItems = getItems()
+    console.log(getItems())
+    console.log(hasItems())
+    props.prices = json.prices
+    return props
   }
 
   // constructor(props) {
@@ -27,6 +33,11 @@ export default class extends React.Component {
         </Head>
 
         <h1>Welcome to my online shop</h1>
+
+        {hasItems() &&
+          <button>View basket</button>
+        }
+
         <p>Please select an item you would like to purchase</p>
         <ul>
         {this.props.prices.map((price) =>
@@ -38,7 +49,7 @@ export default class extends React.Component {
               <div>
                 <p><strong>Special Deal!</strong></p>
                 <p>You can buy ${price.special_qty} for ${price.unit_price}</p>
-                
+
               </div>
             }
           </li>
