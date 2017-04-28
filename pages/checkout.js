@@ -1,69 +1,61 @@
 import React from 'react'
-import Head from 'next/head'
+import Header from './header'
 import Link from 'next/link'
 import {addItem, getItems, hasItems} from './../services/store'
-// import 'isomorphic-fetch'
 
 export default class extends React.Component {
 
   static async getInitialProps ({ query }) {
-    // console.log(query)
-    // console.log(getItems())
-    // const res = await fetch('https://api.myjson.com/bins/gx6vz')
-    // const json = await res.json()
-    // return { prices: json.prices }
     let props = {}
-    let selectedItems = getItems();
-    // console.log(props.selectedItems);
-    let items = [];
+    let selectedItems = getItems()
+    let items = []
+    let total = 0
     for(let i in selectedItems){
-      // let obj = {name:i,price:selectedItems[i]}
-      items.push({name:i,quantity:selectedItems[i].quantity, price:selectedItems[i].price});
+      items.push({name:i,quantity:selectedItems[i].quantity, price:selectedItems[i].price})
+      total += parseInt(selectedItems[i].price,10)
     }
-    // console.log(items);
-    props.items = items;
-    // props.current = query
+    props.items = items
+    props.total = total
     return props
   }
 
   constructor(props) {
     super(props)
     this.state = {
-      quantity:1
+      total:0
     }
-    this.handleChange = this.handleChange.bind(this);
-    this.addToCart = this.addToCart.bind(this);
-  }
-
-  addToCart(){
-    console.log(this.state.quantity)
-    addItem(this.props.current.name, this.state.quantity);
-  }
-
-  handleChange(event) {
-    this.setState({quantity: event.target.value});
   }
 
   render () {
     return (
       <div>
-        <Head>
-          <title>My Online Shop</title>
-          <meta name="viewport" content="initial-scale=1.0, width=device-width" />
-        </Head>
+        <Header />
 
-        <h1></h1>
+        <h1>Your Shoppoing Cart</h1>
         {hasItems() &&
           <div>
-            <ul>
-            {this.props.items.map((item) =>
-              <li key={item.name}>{item.name} {item.price} {item.quantity}</li>
-            )}
-            </ul>
+            <table>
+              <tr>
+                <th>Item</th>
+                <th>Quantity</th>
+                <th>Price</th>
+              </tr>
+                {this.props.items.map((item) =>
+                  <tr key={item.name}>
+                    <td>{item.name}</td>
+                    <td>{item.quantity}</td>
+                    <td>${item.price}</td>
+                  </tr>
+                )}
+            </table>
           </div>
         }
+        Your total price is: ${this.props.total}
+        <br />
+        <Link href={{ pathname: 'purchase',}}><a>Buy Now</a></Link>
         <br />
         <Link href={{ pathname: '/',}}><a>Back to shopping</a></Link>
+
 
       </div>
     )

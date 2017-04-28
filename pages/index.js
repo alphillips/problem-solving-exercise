@@ -1,6 +1,6 @@
 import React from 'react'
-import Head from 'next/head'
 import Link from 'next/link'
+import Header from './header'
 import {addItem, getItems, hasItems} from './../services/store'
 import 'isomorphic-fetch'
 
@@ -10,27 +10,44 @@ export default class extends React.Component {
     const res = await fetch('https://api.myjson.com/bins/gx6vz')
     const json = await res.json()
     let props = {}
-    props.selectedItems = getItems()
-    console.log(getItems())
-    console.log(hasItems())
     props.prices = json.prices
     return props
   }
 
-  // constructor(props) {
-  //   super(props)
-  //   this.state = {
-  //     view:'home'
-  //   }
-  // }
+  renderItemList = (price) =>{
+    return (
+      <li key={price.name}>
+        <div>Item: {price.name} Price: ${price.unit_price}</div>
+
+        <Link href={
+          {
+            pathname: 'item',
+            query: {
+                  name: price.name,
+                  price: price.unit_price,
+                  special: price.special_qty || '',
+                  specialPrice:price.special_price || ''
+            }
+          }
+        }><a>Add to cart</a></Link>
+        <br />
+        {price.special_price &&
+          <div>
+            <p><strong>Special Deal!</strong> You can buy ${price.special_qty} for ${price.special_price}</p>
+            <p></p>
+          </div>
+        }
+
+        <hr/>
+      </li>
+    );
+  }
 
   render () {
     return (
       <div>
-        <Head>
-          <title>My Online Shop</title>
-          <meta name="viewport" content="initial-scale=1.0, width=device-width" />
-        </Head>
+
+        <Header />
 
         <h1>Welcome to my online shop</h1>
 
@@ -41,18 +58,7 @@ export default class extends React.Component {
         <p>Please select an item you would like to purchase</p>
         <ul>
         {this.props.prices.map((price) =>
-          <li key={price.name}>
-            <div>{price.name} ${price.unit_price}</div>
-
-            <Link href={{ pathname: 'item', query: { name: price.name, price: price.unit_price}}}><a>Buy now</a></Link>
-            {price.special_price &&
-              <div>
-                <p><strong>Special Deal!</strong></p>
-                <p>You can buy ${price.special_qty} for ${price.unit_price}</p>
-
-              </div>
-            }
-          </li>
+          this.renderItemList(price)
         )}
         </ul>
       </div>
