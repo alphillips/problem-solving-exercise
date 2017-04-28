@@ -1,6 +1,7 @@
 import React from 'react'
-import Header from './header'
 import Link from 'next/link'
+
+import Header from './header'
 import {addItem, getItems, hasItems} from './../services/store'
 
 export default class extends React.Component {

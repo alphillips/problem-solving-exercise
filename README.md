@@ -27,4 +27,4 @@ Run the app
 npm run dev
 ```
 
-[Go to app](http://localhost:3000)
+Go to app `http://localhost:3000`

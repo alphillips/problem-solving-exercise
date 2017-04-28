@@ -1,5 +1,6 @@
 import React from 'react'
 import Link from 'next/link'
+
 import Header from './header'
 import {addItem, getItems, hasItems} from './../services/store'
 
@@ -26,7 +27,6 @@ export default class extends React.Component {
   }
 
   addToCart(){
-    console.log(this.state.quantity)
     addItem(this.props.current.name, this.state.quantity);
   }
 

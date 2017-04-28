@@ -1,8 +1,10 @@
 import React from 'react'
 import Link from 'next/link'
+import 'isomorphic-fetch'
+
 import Header from './header'
 import {addItem, getItems, hasItems} from './../services/store'
-import 'isomorphic-fetch'
+
 
 export default class extends React.Component {
 
